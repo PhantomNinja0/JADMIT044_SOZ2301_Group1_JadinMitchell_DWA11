@@ -4,14 +4,16 @@ import { add, subtract, reset } from './modules/actions.js';
 
 const store = createStore(reducer);
 
-console.log(store.getState());
+store.subscribe((_, next) => console.log(next))
 
+
+store.getState();
 store.dispatch(add());
 store.dispatch(add());
-console.log(store.getState());
+store.dispatch(add());
+store.dispatch(add());
 
 store.dispatch(subtract());
-console.log(store.getState());
 
 store.dispatch(reset());
-console.log(store.getState());
+
