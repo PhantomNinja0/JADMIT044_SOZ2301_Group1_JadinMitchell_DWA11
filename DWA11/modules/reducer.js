@@ -14,7 +14,7 @@ export function reducer(state, action){
         case 'RESET':
             return {
                 ...state,
-             count: state.count = 0
+             count: 0
             }
         default:
           return state;
