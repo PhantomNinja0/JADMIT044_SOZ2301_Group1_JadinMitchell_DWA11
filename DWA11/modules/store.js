@@ -1,29 +1,39 @@
 export function createStore(reducer){
-    let state = {
+    let state = [{
     count: 0
     }
+  ]
     let listeners = [];
 
    function getState(){
-    return state;
+    return Object.freeze({...state[0]})
    }
 
-   function dispatch(action){
-    state = reducer(state, action);
-    listeners.forEach(listener => listener());
+   const dispatch = (action) => {
+    const prev = getState()
+    const next = reducer(prev, action);
+    
+    listeners.forEach((item) => item(prev, next));
+    state.unshift(next)
    }
 
-   function subscribe(listener){
-     listeners.push(listener);
+   const subscribe = (listener) => {
+    listeners.push(listener);
+    const filt = (item) => item !== listener
 
-     return function unsubscribe(){
-        listeners = listeners.filter(l => l  !== listener)
+    const unsubscribe = () => {
+      const nextSubscribers = listeners.filter(filt)
+      listeners = nextSubscribers;
+    }
+
+    return{
+      unsubscribe,
      }
-   }
+  }
 
    return{
     getState,
     dispatch,
-    subscribe
+    subscribe,
    }
 }
